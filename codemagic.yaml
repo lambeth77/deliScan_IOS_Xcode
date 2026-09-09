@@ -1,0 +1,22 @@
+workflows:
+  ios-verify:
+    name: CourseScanner — vérifier la compilation
+    max_build_duration: 60
+    instance_type: mac_mini_m2
+    environment:
+      xcode: latest
+    scripts:
+      - name: Compiler l’application et l’extension sans signature
+        script: |
+          xcodebuild \
+            -project "$CM_BUILD_DIR/CourseScanner.xcodeproj" \
+            -scheme "CourseScanner" \
+            -configuration Debug \
+            -sdk iphoneos \
+            -derivedDataPath "$CM_BUILD_DIR/build/DerivedData" \
+            -resultBundlePath "$CM_BUILD_DIR/build/CourseScanner.xcresult" \
+            CODE_SIGNING_ALLOWED=NO \
+            build
+    artifacts:
+      - build/CourseScanner.xcresult
+      - build/DerivedData/Build/Products/**/*.app
